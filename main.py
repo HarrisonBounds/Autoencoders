@@ -10,5 +10,5 @@ for data in dataset["train"]:
     if label.find("face") != -1:
         dataset_split.append(data)
         
-print(len(dataset_split))
+
 
