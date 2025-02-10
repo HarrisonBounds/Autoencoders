@@ -32,10 +32,13 @@ transformations = transforms.Compose([
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
+resize_transform = transforms.Resize(64)
+
 def augment_images(dataset):
     augmented_data = []
     for data in dataset:
         image = data["image"].convert("RGB")  # Convert to PIL Image
+        image = resize_transform(image) #Resize 
         for _ in range(5):  # Augment each image 5 times
             augmented_data.append(transformations(image))
     return augmented_data
@@ -53,6 +56,7 @@ test_set_augmented = torch.stack(test_set_augmented)
 print(f"Original train set: {len(train_set)}, Augmented train set: {len(train_set_augmented)}")
 print(f"Original valid set: {len(valid_set)}, Augmented valid set: {len(valid_set_augmented)}")
 print(f"Original test set: {len(test_set)}, Augmented test set: {len(test_set_augmented)}")
+
     
 
         
