@@ -32,11 +32,11 @@ class AE(nn.Module):
         )
         
     def forward(self, x):
-        x = x.view(x.size(0), -1)
+        x = x.view(x.size(0), -1)  # Flatten the input
         encoded = self.encoder(x)
         decoded = self.decoder(encoded)
-        
-        return decoded
+        return decoded.view(x.size(0), 3, 64, 64)  # Reshape output to match input
+
         
         
         

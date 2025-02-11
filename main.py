@@ -67,10 +67,10 @@ optimizer = torch.optim.Adam(model.parameters(),
 
 num_epochs = 20
 losses = []
+inputs = []
 outputs = []
 for epoch in range(num_epochs):
     for image in train_loader:
-        print(f"Batch input shape: {image.shape}") 
         output_img = model(image)
         loss = loss_func(output_img, image)
         
@@ -78,15 +78,53 @@ for epoch in range(num_epochs):
         loss.backward()
         optimizer.step()
         
-        losses.append(loss_func)
+        losses.append(loss.item())
         
-    outputs.append((num_epochs, image, output_img))
+        inputs.append(image)
+        outputs.append(output_img)
     
 plt.style.use('fivethirtyeight')
 plt.xlabel('Iterations')
 plt.ylabel('Loss')
 
-plt.plot(losses[-100:])
+plt.plot(losses)
+plt.show()
+
+n = 5  # Number of images to show
+
+# Get a batch of images
+image_batch = inputs[0]  # First batch of original images
+output_batch = outputs[0]  # First batch of reconstructed images
+
+# Undo normalization
+mean = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
+std = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
+
+image_batch = image_batch * std + mean  # Unnormalize
+output_batch = output_batch * std + mean  # Unnormalize
+
+# Detach and clamp values for visualization
+image_batch = torch.clamp(image_batch.detach(), 0, 1)
+output_batch = torch.clamp(output_batch.detach(), 0, 1)
+
+# Plot images side by side
+fig, axes = plt.subplots(2, n, figsize=(n * 2, 4))
+
+for i in range(n):
+    # Original Image
+    axes[0, i].imshow(image_batch[i].permute(1, 2, 0).cpu().numpy())  # Convert to NumPy
+    axes[0, i].axis("off")
+
+    # Reconstructed Image
+    axes[1, i].imshow(output_batch[i].permute(1, 2, 0).cpu().numpy())  # Convert to NumPy
+    axes[1, i].axis("off")
+
+axes[0, 0].set_title("Original")
+axes[1, 0].set_title("Reconstructed")
+
+plt.show()
+
+
         
 
 
