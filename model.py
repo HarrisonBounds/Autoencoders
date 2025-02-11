@@ -6,36 +6,35 @@ class AE(nn.Module):
         
         #Encoder
         self.encoder = nn.Sequential(
-            nn.Linear(input_width*input_height*num_channels, 128),
+            nn.Conv2d(num_channels, 128, kernel_size=3, stride=2, padding=1),
             nn.ReLU(),
-            nn.Linear(128, 64),
+            nn.Conv2d(128, 64, kernel_size=3, stride=2, padding=1),
             nn.ReLU(),
-            nn.Linear(64, 32),
+            nn.Conv2d(64, 32, kernel_size=3, stride=2, padding=1),
             nn.ReLU(),
-            nn.Linear(32, 16),
+            nn.Conv2d(32, 16, kernel_size=3, stride=2, padding=1),
             nn.ReLU(),
-            nn.Linear(16, 8),
+            nn.Conv2d(16, 8, kernel_size=3, stride=2, padding=1),
         )
         
         #Decoder
         self.decoder = nn.Sequential(
-        nn.Linear(8, 16),
+        nn.ConvTranspose2d(8, 16, kernel_size=3, stride=2, padding=1, output_padding=1),
         nn.ReLU(),
-        nn.Linear(16, 32),
+        nn.ConvTranspose2d(16, 32, kernel_size=3, stride=2, padding=1, output_padding=1),
         nn.ReLU(),
-        nn.Linear(32, 64),
+        nn.ConvTranspose2d(32, 64, kernel_size=3, stride=2, padding=1, output_padding=1),
         nn.ReLU(),
-        nn.Linear(64, 128),
+        nn.ConvTranspose2d(64, 128, kernel_size=3, stride=2, padding=1, output_padding=1),
         nn.ReLU(),
-        nn.Linear(128, input_width*input_height*num_channels),
+        nn.ConvTranspose2d(128, num_channels, kernel_size=3, stride=2, padding=1, output_padding=1),
         nn.Sigmoid()
         )
         
     def forward(self, x):
-        x = x.view(x.size(0), -1)  # Flatten the input
         encoded = self.encoder(x)
         decoded = self.decoder(encoded)
-        return decoded.view(x.size(0), 3, 64, 64)  # Reshape output to match input
+        return decoded
 
         
         

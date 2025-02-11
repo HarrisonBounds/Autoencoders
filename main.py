@@ -26,10 +26,10 @@ test_set, valid_set = train_test_split(temp_set, test_size=0.5)
 transformations = transforms.Compose([
     transforms.Resize(64), 
     transforms.RandomHorizontalFlip(),
-    transforms.RandomRotation(30),
-    transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2),
+    #transforms.RandomRotation(30),
+    #transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2),
     transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    #transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
 
@@ -62,15 +62,15 @@ train_loader = torch.utils.data.DataLoader(dataset = train_set_augmented,
 model = AE(input_width=64, input_height=64, num_channels=3)
 loss_func = torch.nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(),
-                             lr = 1e-1,
+                             lr = 0.001,
                              weight_decay = 1e-8)
 
-num_epochs = 20
+num_epochs = 50
 losses = []
 inputs = []
 outputs = []
 for epoch in range(num_epochs):
-    for image in train_loader:
+    for i, image in enumerate(train_loader):
         output_img = model(image)
         loss = loss_func(output_img, image)
         
@@ -80,8 +80,10 @@ for epoch in range(num_epochs):
         
         losses.append(loss.item())
         
-        inputs.append(image)
-        outputs.append(output_img)
+        # Store the first batch of the last epoch for visualization
+        if epoch == num_epochs - 1 and i == 0:
+            inputs.append(image)
+            outputs.append(output_img)
     
 plt.style.use('fivethirtyeight')
 plt.xlabel('Iterations')
@@ -96,12 +98,14 @@ n = 5  # Number of images to show
 image_batch = inputs[0]  # First batch of original images
 output_batch = outputs[0]  # First batch of reconstructed images
 
-# Undo normalization
-mean = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
-std = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-image_batch = image_batch * std + mean  # Unnormalize
-output_batch = output_batch * std + mean  # Unnormalize
+# Undo normalization
+# mean = torch.tensor([0.485, 0.456, 0.406], device=device).view(1, 3, 1, 1)
+# std = torch.tensor([0.229, 0.224, 0.225], device=device).view(1, 3, 1, 1)
+
+# image_batch = image_batch * std + mean  # Unnormalize
+# output_batch = output_batch * std + mean  # Unnormalize
 
 # Detach and clamp values for visualization
 image_batch = torch.clamp(image_batch.detach(), 0, 1)
