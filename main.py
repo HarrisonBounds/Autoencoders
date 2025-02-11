@@ -26,10 +26,10 @@ test_set, valid_set = train_test_split(temp_set, test_size=0.5)
 transformations = transforms.Compose([
     transforms.Resize(64), 
     transforms.RandomHorizontalFlip(),
-    transforms.RandomRotation(30),
-    transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2),
+    #transforms.RandomRotation(30),
+    #transforms.ColorJitter(brightness=0.2, contrast=0.2, saturation=0.2, hue=0.2),
     transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    #transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
 
@@ -96,12 +96,14 @@ n = 5  # Number of images to show
 image_batch = inputs[0]  # First batch of original images
 output_batch = outputs[0]  # First batch of reconstructed images
 
-# Undo normalization
-mean = torch.tensor([0.485, 0.456, 0.406]).view(1, 3, 1, 1)
-std = torch.tensor([0.229, 0.224, 0.225]).view(1, 3, 1, 1)
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
-image_batch = image_batch * std + mean  # Unnormalize
-output_batch = output_batch * std + mean  # Unnormalize
+# Undo normalization
+# mean = torch.tensor([0.485, 0.456, 0.406], device=device).view(1, 3, 1, 1)
+# std = torch.tensor([0.229, 0.224, 0.225], device=device).view(1, 3, 1, 1)
+
+# image_batch = image_batch * std + mean  # Unnormalize
+# output_batch = output_batch * std + mean  # Unnormalize
 
 # Detach and clamp values for visualization
 image_batch = torch.clamp(image_batch.detach(), 0, 1)
