@@ -62,15 +62,15 @@ train_loader = torch.utils.data.DataLoader(dataset = train_set_augmented,
 model = AE(input_width=64, input_height=64, num_channels=3)
 loss_func = torch.nn.MSELoss()
 optimizer = torch.optim.Adam(model.parameters(),
-                             lr = 1e-1,
+                             lr = 0.001,
                              weight_decay = 1e-8)
 
-num_epochs = 20
+num_epochs = 50
 losses = []
 inputs = []
 outputs = []
 for epoch in range(num_epochs):
-    for image in train_loader:
+    for i, image in enumerate(train_loader):
         output_img = model(image)
         loss = loss_func(output_img, image)
         
@@ -80,8 +80,10 @@ for epoch in range(num_epochs):
         
         losses.append(loss.item())
         
-        inputs.append(image)
-        outputs.append(output_img)
+        # Store the first batch of the last epoch for visualization
+        if epoch == num_epochs - 1 and i == 0:
+            inputs.append(image)
+            outputs.append(output_img)
     
 plt.style.use('fivethirtyeight')
 plt.xlabel('Iterations')
