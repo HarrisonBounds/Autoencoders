@@ -90,22 +90,16 @@ plt.xlabel('Iterations')
 plt.ylabel('Loss')
 
 plt.plot(losses)
+plt.savefig("loss_plots/training/loss_vs_iterations")
 plt.show()
 
-n = 5  # Number of images to show
+n = 5 
 
 # Get a batch of images
 image_batch = inputs[0]  # First batch of original images
 output_batch = outputs[0]  # First batch of reconstructed images
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-
-# Undo normalization
-# mean = torch.tensor([0.485, 0.456, 0.406], device=device).view(1, 3, 1, 1)
-# std = torch.tensor([0.229, 0.224, 0.225], device=device).view(1, 3, 1, 1)
-
-# image_batch = image_batch * std + mean  # Unnormalize
-# output_batch = output_batch * std + mean  # Unnormalize
 
 # Detach and clamp values for visualization
 image_batch = torch.clamp(image_batch.detach(), 0, 1)
@@ -126,7 +120,9 @@ for i in range(n):
 axes[0, 0].set_title("Original")
 axes[1, 0].set_title("Reconstructed")
 
+plt.savefig("output_plots/training/input_vs_output.png")
 plt.show()
+
 
 
         
