@@ -60,3 +60,9 @@ Hyperparameters:
 # 2. Separate dataset into 2 or more classes
 
 # 3. Attribute composition with vector arithmetic
+
+## Specify which attribute you selected, the vector arithmetic applied and the resulting image(s)
+
+## Provide a qualitative evaluation of your composite image
+
+## Discuss ways to improve the quality of your generated image

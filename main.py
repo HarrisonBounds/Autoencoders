@@ -97,7 +97,6 @@ plt.plot(losses)
 plt.savefig("loss_plots/training/loss_vs_iterations")
 plt.show()
 
-n = 5
 
 # Get a batch of images
 image_batch = inputs[0]  # First batch of original images
@@ -109,6 +108,7 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 image_batch = torch.clamp(image_batch.detach(), 0, 1)
 output_batch = torch.clamp(output_batch.detach(), 0, 1)
 
+n = 5
 # Plot images side by side
 fig, axes = plt.subplots(2, n, figsize=(n * 2, 4))
 
@@ -128,3 +128,12 @@ axes[1, 0].set_title("Reconstructed")
 
 plt.savefig("output_plots/training/input_vs_output.png")
 plt.show()
+
+# Select an attribute from the emoji dataset
+# (internal or external to your selected subset)
+# to compose with any image from your selected subset.
+# Use vector arithmetic on latent representations to generate
+# a composite image that expresses the attribute.
+
+attributes = ["face", "smiling", "heart", "eyes",
+              "sad", "angry", "happy", "crying", "kiss", "tongue"]
