@@ -58,5 +58,26 @@ Hyperparameters:
 ## Discuss any decisions or observations that you find relevant
 
 # 2. Separate dataset into 2 or more classes
+## Describe how you separated your dataset into classes
+The original dataset consisted of 256x256 emojis (images) with associated text which describes the image. I sorted through the dataset and collected emoji which had the words 'man' or 'woman' appear in their description. After storing these emojis, in two lists (or classes), I generated labels: 0 corresponding to class man and 1 corresponding to class woman. After zipping and merging this data, I shuffled and split the data into training, validation and test sets.
+
+## Describe your classification technique and hyper parameters
+The classification technique was to use the output of the encoder network, flatten it into a single layer, and then use 2 `nn.Linear` layers with ReLU to output the classifier logits. The cross entropy loss function is used as the classification task loss. The hyper parameters used are:
+- Layer Type: nn.Linear (excluding the encoding layers from AE model)
+- Number of input/ouput channels per layer: (32, 128) -> (128, 2)
+- Number of total layers: 3 
+- Batch size: 32
+- Learning Rate: 0.001
+- Resize: 64, 64
+- Transformations: Resize, RandomHorizontalFlip
+- Loss Function: Cross Entropy
+- Weight Decay: 1e-6
+- Optimizer: Adam
+- Epochs: 50
+
+## Plot learning curves for training and validation loss for MSE and classification accuracy
+## Provide a side by side example of 5 input and output images
+## Discuss how incorporating classification as an auxillary task impact the performance of your autoencoder
+## Speculate why the performance changed and recommend (but do not implement) an experiment to confirm or reject your speculation
 
 # 3. Attribute composition with vector arithmetic
