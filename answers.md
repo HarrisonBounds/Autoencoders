@@ -58,6 +58,38 @@ Hyperparameters:
 ## Discuss any decisions or observations that you find relevant
 
 # 2. Separate dataset into 2 or more classes
+## Describe how you separated your dataset into classes
+The original dataset consisted of 256x256 emojis (images) with associated text which describes the image. We sorted through the dataset and sampled emojis which had the word "face" or "fist" appear in their description. After storing these emojis, we separated them into two classes based on the word "face" or "fist". All emojis corresponding to "fist" were assigned label 1, and all other face emojis were assigned label zero. After zipping and merging the images and their labels, I shuffled and split the data into training, validation and test sets. Additional augmentation was necesasay to increase the size of the dataset, since the "fist" emojis were very few in comparison to the "face" emojis.
+
+## Describe your classification technique and hyper parameters
+The classification technique involved using the output of the encoder network, flattening it into a single layer, and then use 2 `nn.Linear` layers along with ReLU and Dropout regularization. The last linear layer's ouput is the class logits. Cross entropy is used as a loss function for this classification task. The hyper parameters used are:
+- Layer Type: nn.Linear (excluding the encoding layers)
+- Number of input/ouput channels per layer: (32, 128) -> (128, 2)
+- Number of total layers: 3 (excluding the encoding layers) 
+- Batch size: 32
+- Learning Rate: 0.001
+- Resize: 64, 64
+- Transformations: Resize, RandomHorizontalFlip
+- Loss Function: Cross Entropy
+- Weight Decay: 1e-5
+- Optimizer: Adam
+- Epochs: 50
+
+## Plot learning curves for training and validation loss for MSE and classification accuracy
+<center>
+<img src="loss_plots/classifier/res.png">
+</center>
+
+## Provide a side by side example of 5 input and output images
+<center>
+<img src="output_plots/classifier/res.png">
+</center>
+
+## Discuss how incorporating classification as an auxillary task impact the performance of your autoencoder
+By incorporating the classification as an auxillary task, the autoencoder seems to get better at extracting important features from the model bottleneck (encoder output). The classification loss makes it factor in the decision of predicting the correct label, while adjusting the weights involved in downsampling the image, thereby affecting the entire encoding decoding pipeline. However, in our case the model seems to overfit for the classification task, I believe this is due to the lack of diverse samples, especially for the fist set of images, but I still believe the performance should improve with the auxillary classification task.
+
+## Speculate why the performance changed and recommend (but do not implement) an experiment to confirm or reject your speculation
+The performance changed because the classification loss is added as a lambda factor into the total loss of the model. The weight given by the model to the classification task is a variable that can be changed using the lambda variable. This can serve as an important experiment to verify the model performance, as testing the model performance at different values of lambda, can serve as a metric to determine how the model weighs the classification and reconstruction tasks, and how one can affect the other.
 
 # 3. Attribute composition with vector arithmetic
 
