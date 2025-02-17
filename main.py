@@ -128,12 +128,3 @@ axes[1, 0].set_title("Reconstructed")
 
 plt.savefig("output_plots/training/input_vs_output.png")
 plt.show()
-
-# Select an attribute from the emoji dataset
-# (internal or external to your selected subset)
-# to compose with any image from your selected subset.
-# Use vector arithmetic on latent representations to generate
-# a composite image that expresses the attribute.
-
-attributes = ["face", "smiling", "heart", "eyes",
-              "sad", "angry", "happy", "crying", "kiss", "tongue"]
