@@ -1,7 +1,7 @@
 import torch.nn as nn
 
 
-class AE(nn.Module):
+class AE_AUX(nn.Module):
     def __init__(self, input_width, input_height, num_channels, num_classes, classification_lambda = 1.0):
         super().__init__()
         self.num_classes = num_classes

@@ -2,7 +2,7 @@ from datasets import load_dataset
 from sklearn.model_selection import train_test_split
 from torchvision import transforms
 import torch
-from aux_model import AE
+from aux_model import AE_AUX
 import matplotlib.pyplot as plt
 import random
 
@@ -89,7 +89,7 @@ input_width = 64
 num_channels = 3
 
 # Initialising the model parameters
-model = AE(input_width, input_height, num_channels, num_classes, cls_lambda)
+model = AE_AUX(input_width, input_height, num_channels, num_classes, cls_lambda)
 optimizer = torch.optim.Adam(model.parameters(), lr = 0.001, weight_decay=1e-5)
 
 num_epochs = 50
