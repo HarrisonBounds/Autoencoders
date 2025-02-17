@@ -43,6 +43,7 @@ class AE(nn.Module):
             nn.Flatten(),
             nn.Linear(8 * (input_width // 32) * (input_height // 32), 128), # Stride of 2 reduces the image dimensions by 2, so for 5 layers image size is reduced by 32
             nn.ReLU(),
+            nn.Dropout(0.3),
             nn.Linear(128, self.num_classes), # 2 stems from number of output classes
         )
 
@@ -52,16 +53,3 @@ class AE(nn.Module):
         class_logits = self.classifier(encoded)
         return decoded, class_logits
     
-    def compute_loss(self, x, target_images, target_labels):
-        decoded_imgs, class_logits = self.forward(x)
-
-        mse_loss = nn.MSELoss()
-        ae_loss = mse_loss(decoded_imgs, target_images)
-
-        ce_loss = nn.CrossEntropyLoss()
-        classification_loss = ce_loss(class_logits, target_labels) 
-
-        total_loss = ae_loss + self.classification_lambda * classification_loss
-        
-        return total_loss, ae_loss, classification_loss
-
